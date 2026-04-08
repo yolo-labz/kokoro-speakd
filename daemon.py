@@ -266,8 +266,9 @@ def _unlink(path: str) -> None:
 
 
 def _pick_player(path: str) -> "list[str] | None":
+    rate = os.environ.get("KOKORO_PLAYBACK_RATE", "1")
     for name, extras in (
-        ("afplay", []),
+        ("afplay", ["-r", rate]),
         ("aplay", ["-q"]),
         ("paplay", []),
     ):
