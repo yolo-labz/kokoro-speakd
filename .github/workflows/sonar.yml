@@ -1,0 +1,55 @@
+# TODO: Provision SonarQube project on sonarqube.home301server.com.br:
+#   1. Create project: yolo-labz_kokoro-speakd
+#   2. Generate PROJECT_ANALYSIS_TOKEN (scoped to this project key)
+#   3. Set repo variable SONAR_HOST_URL = https://sonarqube.home301server.com.br
+#   4. Set repo secret SONAR_TOKEN = <the project analysis token>
+
+name: SonarQube scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout (full history for blame-based coverage)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Skip if SonarQube not configured
+        id: check
+        env:
+          HOST: ${{ vars.SONAR_HOST_URL }}
+          TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$HOST" ] || [ -z "$TOKEN" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "SONAR_HOST_URL or SONAR_TOKEN not set — skipping Sonar scan."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: SonarQube scan
+        if: steps.check.outputs.skip == 'false'
+        uses: SonarSource/sonarqube-scan-action@299e4b793aaa83bf2aba7c9c14bedbb485688ec4 # v7.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=yolo-labz_kokoro-speakd
+            -Dsonar.projectName=kokoro-speakd
+            -Dsonar.sources=.
+            -Dsonar.exclusions=tests/**
+            -Dsonar.python.version=3.11
+            -Dsonar.sourceEncoding=UTF-8

@@ -51,7 +51,7 @@ def send(req: dict, sock_path: Path) -> dict:
         s.connect(str(sock_path))
         s.sendall((json.dumps(req) + "\n").encode("utf-8"))
         data = s.recv(RECV_BUF)
-    except (socket.error, OSError) as exc:
+    except OSError as exc:
         return {"status": "error", "error": str(exc)}
     else:
         try:
@@ -59,7 +59,7 @@ def send(req: dict, sock_path: Path) -> dict:
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
             return {"status": "error", "error": f"bad reply: {exc}"}
     finally:
-        try:
+        try:  # noqa: SIM105 — NameError catch is intentional (s may be unbound)
             s.close()  # type: ignore[name-defined]
         except (OSError, NameError):
             pass

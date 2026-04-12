@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kokoro-speakd"
+version = "0.0.1"
+description = "Persistent Kokoro TTS daemon for Claude Code"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Pedro H S Balbino", email = "pedrohba1@gmail.com" }]
+
+[project.urls]
+Homepage = "https://github.com/yolo-labz/kokoro-speakd"
+Repository = "https://github.com/yolo-labz/kokoro-speakd"
+Issues = "https://github.com/yolo-labz/kokoro-speakd/issues"
+
+[project.dependencies]
+torch = ">=2.0"
+onnxruntime = ">=1.16"
+
+[project.optional-dependencies]
+gpu = ["onnxruntime-gpu"]
+
+[project.scripts]
+kokoro-speakd = "daemon:main"
+kokoro-speak = "client:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "TCH"]
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
