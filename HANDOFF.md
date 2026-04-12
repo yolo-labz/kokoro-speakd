@@ -24,15 +24,19 @@
 - Branch protection enabled (PR review + linear history + no force push)
 - Private Vulnerability Reporting enabled
 
-## Pending manual steps
+## Completed post-merge (2026-04-12)
 
-1. **SonarQube project** — create `yolo-labz_kokoro-speakd` on `sonarqube.home301server.com.br`, generate PROJECT_ANALYSIS_TOKEN, set via:
-   ```
-   gh secret set SONAR_TOKEN --repo yolo-labz/kokoro-speakd --body "<token>"
-   ```
-2. **PyPI Trusted Publisher** — on pypi.org, create project `kokoro-speakd`, add pending publisher: owner=yolo-labz, repo=kokoro-speakd, workflow=release.yml, environment=pypi
-3. **Add required status checks** — after first main run: `lint`, `typecheck`, `test`, `CodeQL`, `scan` (scorecard + osv)
-4. **Model weights release asset** — separate workflow to upload kokoro model weights with attestation (not in this PR, planned for next feature)
+- **SonarQube project** created (`yolo-labz_kokoro-speakd`) via direct DB insert on Dokku host. PROJECT_ANALYSIS_TOKEN generated (SHA-384 hash), `SONAR_TOKEN` secret set. Token validated: `{"valid":true}`.
+- **PyPI Trusted Publisher** registered on pypi.org via Chrome automation (recovery code 2FA bypass). Pending publisher: owner=yolo-labz, repo=kokoro-speakd, workflow=release.yml, environment=pypi.
+- **Dependabot PR #2 merged** (grouped: 7 action updates in one PR).
+- **Release v0.1.1 live** with 4 assets: wheel, sdist, sbom.cdx.json, sbom.spdx.json.
+
+## Nice-to-have (none blocking)
+
+1. **Add required status checks** — now that lint, typecheck, test, CodeQL, and scan have all run on main, lock them as required
+2. **Model weights release asset** — separate workflow to upload kokoro model weights with attestation (planned for next feature)
+3. **Version mismatch** — `pyproject.toml` says `version = "0.0.1"` but the tag is `v0.1.1`. Align in a follow-up commit (`version = "0.1.1"`)
+4. **hatchling file selection** was fixed (explicit `[tool.hatch.build.targets.wheel] include`) but consider migrating to a `src/` layout long-term
 
 ## Source of truth
 
