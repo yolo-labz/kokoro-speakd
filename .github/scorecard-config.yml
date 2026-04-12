@@ -1,0 +1,8 @@
+# OpenSSF Scorecard configuration
+# https://github.com/ossf/scorecard/blob/main/docs/config.md
+annotations:
+  - checks:
+      - Binary-Artifacts
+    reasons:
+      - reason: not-applicable
+        detail: "No binary artifacts — model weights are distributed as GitHub Release assets, not checked into the repo."
