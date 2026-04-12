@@ -11,14 +11,15 @@ requires-python = ">=3.11"
 license = "MIT"
 authors = [{ name = "Pedro H S Balbino", email = "pedrohba1@gmail.com" }]
 
+dependencies = [
+  "torch>=2.0",
+  "onnxruntime>=1.16",
+]
+
 [project.urls]
 Homepage = "https://github.com/yolo-labz/kokoro-speakd"
 Repository = "https://github.com/yolo-labz/kokoro-speakd"
 Issues = "https://github.com/yolo-labz/kokoro-speakd/issues"
-
-[project.dependencies]
-torch = ">=2.0"
-onnxruntime = ">=1.16"
 
 [project.optional-dependencies]
 gpu = ["onnxruntime-gpu"]
