@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 
 
-def extract_summary(text: str) -> "str | None":
+def extract_summary(text: str) -> str | None:
     """Return the inner text of the first ``<!-- TTS_SUMMARY ... TTS_SUMMARY -->``
     block if present, otherwise ``None``. Used by Claude Code Stop hooks so the
     assistant can opt into a concise spoken summary separate from the visible

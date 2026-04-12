@@ -48,6 +48,7 @@ Environment overrides:
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import shutil
@@ -95,7 +96,7 @@ class Speaker:
         self.pipelines_lock = threading.Lock()
         self.state_lock = threading.Lock()
         self.current_req_id = 0
-        self.current_player: "subprocess.Popen | None" = None
+        self.current_player: subprocess.Popen | None = None
         self.ready = threading.Event()
         self._KPipeline = None
         self._np = None
@@ -107,9 +108,9 @@ class Speaker:
     def load(self) -> None:
         log("loading kokoro runtime...")
         try:
-            from kokoro import KPipeline  # type: ignore
             import numpy as np  # type: ignore
             import soundfile as sf  # type: ignore
+            from kokoro import KPipeline  # type: ignore
         except Exception as exc:
             log(f"FATAL import error: {exc!r}")
             raise
@@ -157,10 +158,8 @@ class Speaker:
             self.current_req_id += 1
             rid = self.current_req_id
             if self.current_player is not None:
-                try:
+                with contextlib.suppress(OSError):
                     self.current_player.kill()
-                except OSError:
-                    pass
                 self.current_player = None
         return rid
 
@@ -187,7 +186,7 @@ class Speaker:
 
         chunks = []
         try:
-            for result in pipeline(text, voice=voice):
+            for result in pipeline(text, voice=voice):  # type: ignore[reportCallIssue]
                 if not self._is_current(rid):
                     log(f"preempted mid-synth rid={rid}")
                     return
@@ -205,19 +204,19 @@ class Speaker:
             log(f"no audio produced rid={rid}")
             return
 
-        audio = self._np.concatenate(chunks)
+        audio = self._np.concatenate(chunks)  # type: ignore[reportOptionalMemberAccess]
 
         # Keep the wav inside our cache dir so lingering files after a crash
         # are easy to find and clean up.
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        tmp = tempfile.NamedTemporaryFile(
+        tmp = tempfile.NamedTemporaryFile(  # noqa: SIM115 — delete=False requires manual lifecycle
             suffix=".wav",
             prefix=f"kokoro-{rid}-",
             delete=False,
             dir=str(CACHE_DIR),
         )
         tmp.close()
-        self._sf.write(tmp.name, audio, SAMPLE_RATE)
+        self._sf.write(tmp.name, audio, SAMPLE_RATE)  # type: ignore[reportOptionalMemberAccess]
 
         with self.state_lock:
             if rid != self.current_req_id:
@@ -241,11 +240,9 @@ class Speaker:
                 _unlink(tmp.name)
                 return
             self.current_player = proc
-            log(
-                f"playing rid={rid} pid={proc.pid} samples={len(audio)} wav={tmp.name}"
-            )
+            log(f"playing rid={rid} pid={proc.pid} samples={len(audio)} wav={tmp.name}")
 
-        try:
+        try:  # noqa: SIM105 — proc.wait() cleanup in daemon; suppress is less clear here
             proc.wait()
         except Exception:  # pragma: no cover
             pass
@@ -259,13 +256,11 @@ class Speaker:
 
 
 def _unlink(path: str) -> None:
-    try:
+    with contextlib.suppress(OSError):
         os.unlink(path)
-    except OSError:
-        pass
 
 
-def _pick_player(path: str) -> "list[str] | None":
+def _pick_player(path: str) -> list[str] | None:
     rate = os.environ.get("KOKORO_PLAYBACK_RATE", "1")
     for name, extras in (
         ("afplay", ["-r", rate]),
@@ -283,10 +278,8 @@ def _pick_player(path: str) -> "list[str] | None":
 
 def serve(sock_path: Path, speaker: Speaker) -> None:
     sock_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
+    with contextlib.suppress(FileNotFoundError):
         sock_path.unlink()
-    except FileNotFoundError:
-        pass
 
     srv = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     srv.bind(str(sock_path))
@@ -352,14 +345,8 @@ def handle_connection(conn: socket.socket, speaker: Speaker) -> None:
             if not text:
                 respond(conn, {"status": "empty"})
                 return
-            voice = (
-                req.get("voice")
-                or os.environ.get("KOKORO_DEFAULT_VOICE", "af_sky")
-            )
-            lang = (
-                req.get("lang")
-                or os.environ.get("KOKORO_DEFAULT_LANG", "a")
-            )
+            voice = req.get("voice") or os.environ.get("KOKORO_DEFAULT_VOICE", "af_sky")
+            lang = req.get("lang") or os.environ.get("KOKORO_DEFAULT_LANG", "a")
             rid = speaker.speak(text, voice, lang)
             respond(conn, {"status": "queued", "id": rid})
             return
@@ -370,15 +357,11 @@ def handle_connection(conn: socket.socket, speaker: Speaker) -> None:
         )
     except Exception as exc:
         log(f"handler error: {exc!r}")
-        try:
+        with contextlib.suppress(OSError):
             respond(conn, {"status": "error", "error": str(exc)})
-        except OSError:
-            pass
     finally:
-        try:
+        with contextlib.suppress(OSError):
             conn.close()
-        except OSError:
-            pass
 
 
 def respond(conn: socket.socket, payload: dict) -> None:
@@ -393,9 +376,7 @@ def main() -> int:
     # Ignore SIGPIPE so a client disconnecting mid-response doesn't kill us.
     signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
-    sock_path = Path(
-        os.environ.get("KOKORO_SPEAKD_SOCKET", str(DEFAULT_SOCKET))
-    )
+    sock_path = Path(os.environ.get("KOKORO_SPEAKD_SOCKET", str(DEFAULT_SOCKET)))
 
     speaker = Speaker()
     # Background model load so the socket binds immediately and launchd is
@@ -406,8 +387,8 @@ def main() -> int:
         serve(sock_path, speaker)
     except KeyboardInterrupt:
         log("shutdown requested")
-        return 0
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main() or 0)
+    sys.exit(main())
