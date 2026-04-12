@@ -79,6 +79,7 @@ jobs:
     needs: [build, sbom]
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    continue-on-error: true  # PyPI publish may fail until trusted publisher is configured
     environment:
       name: pypi
       url: https://pypi.org/p/kokoro-speakd
