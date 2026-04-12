@@ -28,6 +28,12 @@ gpu = ["onnxruntime-gpu"]
 kokoro-speakd = "daemon:main"
 kokoro-speak = "client:main"
 
+[tool.hatch.build.targets.wheel]
+include = ["client.py", "daemon.py", "markdown.py"]
+
+[tool.hatch.build.targets.sdist]
+include = ["client.py", "daemon.py", "markdown.py", "pyproject.toml", "README.md", "LICENSE"]
+
 [tool.ruff]
 line-length = 120
 target-version = "py311"
