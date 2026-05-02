@@ -35,6 +35,20 @@
               nativeCheckInputs = [];
               meta = old.meta // {broken = false;};
             });
+            # av (PyAV) ships transitively via spacy → wandb → moviepy →
+            # imageio in daemonEnv. Its post-build importsCheck imports all
+            # 22 av submodules in one Python process and OOM-kills (SIGKILL
+            # exit 137) on 16GB-RAM aarch64-darwin under the sandbox memory
+            # limit. PyAV 16.1.0+ is recent (2026-04) and not yet cached on
+            # cache.nixos.org for aarch64-darwin → forced local build.
+            # Skip the post-build verification only; the build itself
+            # succeeds and av is importable at runtime. Linux + x86_64 keep
+            # the importsCheck.
+            av = pyPrev.av.overridePythonAttrs (
+              pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+                dontPythonImportsCheck = true;
+              }
+            );
             en-core-web-sm = pyFinal.buildPythonPackage {
               pname = "en_core_web_sm";
               version = "3.8.0";
