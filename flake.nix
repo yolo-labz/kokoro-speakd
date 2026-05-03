@@ -44,10 +44,18 @@
             # Skip the post-build verification only; the build itself
             # succeeds and av is importable at runtime. Linux + x86_64 keep
             # the importsCheck.
+            # `overridePythonAttrs` requires a function (old -> attrs).
+            # Passing a bare attrset (the previous shape) silently no-ops:
+            # the Python build wraps the call and only invokes a callable,
+            # so the dontPythonImportsCheck flag never reaches the
+            # derivation and importsCheckPhase still runs → OOM on
+            # aarch64-darwin returns. Wrap in `_:` so the attrset is the
+            # function's return value.
             av = pyPrev.av.overridePythonAttrs (
-              pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-                dontPythonImportsCheck = true;
-              }
+              _:
+                pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+                  dontPythonImportsCheck = true;
+                }
             );
             en-core-web-sm = pyFinal.buildPythonPackage {
               pname = "en_core_web_sm";
