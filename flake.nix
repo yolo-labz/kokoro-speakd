@@ -47,14 +47,14 @@
             # `overridePythonAttrs` requires a function (old -> attrs).
             # Passing a bare attrset (the previous shape) silently no-ops:
             # the Python build wraps the call and only invokes a callable,
-            # so the dontPythonImportsCheck flag never reaches the
+            # so the dontUsePythonImportsCheck flag never reaches the
             # derivation and importsCheckPhase still runs → OOM on
             # aarch64-darwin returns. Wrap in `_:` so the attrset is the
             # function's return value.
             av = pyPrev.av.overridePythonAttrs (
               _:
                 pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-                  dontPythonImportsCheck = true;
+                  dontUsePythonImportsCheck = true;
                 }
             );
             en-core-web-sm = pyFinal.buildPythonPackage {
