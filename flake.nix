@@ -54,7 +54,17 @@
             av = pyPrev.av.overridePythonAttrs (
               _:
                 pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+                  # Two hooks must both be neutralised on aarch64-darwin
+                  # under the 16 GiB sandbox: pythonImportsCheckPhase (22-
+                  # submodule one-shot import → SIGKILL 137) AND
+                  # pytestCheckPhase (pytest collection imports the same
+                  # graph and SIGKILLs at the same point). Each hook gates
+                  # on its own `dontUse…` flag — `dontUsePythonImportsCheck`
+                  # for python-imports-check-hook.sh, `dontUsePytestCheck`
+                  # for pytest-check-hook. Setting only one leaves the
+                  # other phase live; the build still OOMs.
                   dontUsePythonImportsCheck = true;
+                  dontUsePytestCheck = true;
                 }
             );
             en-core-web-sm = pyFinal.buildPythonPackage {
