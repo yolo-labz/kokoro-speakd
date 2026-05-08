@@ -16,7 +16,7 @@ on:
 permissions: {}
 
 jobs:
-  scan:
+  sonarqube:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
