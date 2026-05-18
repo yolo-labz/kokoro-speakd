@@ -120,3 +120,9 @@ Italian, and more. Set `KOKORO_VOICE=af_bella` (etc.) and reload the daemon.
 ## License
 
 MIT. See [LICENSE](./LICENSE).
+
+---
+
+## Services
+
+Compliance-grade AI architecture for regulated workloads — async-first, USD-denominated, LATAM-based / EN-fluent. See [blog.home301server.com.br/services](https://blog.home301server.com.br/services/).
