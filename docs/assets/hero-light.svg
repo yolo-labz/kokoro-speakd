@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="kokoro-hero-light-title kokoro-hero-light-desc">
+  <title id="kokoro-hero-light-title">kokoro-speakd: persistent Kokoro TTS daemon for Claude Code</title>
+  <desc id="kokoro-hero-light-desc">Catppuccin Latte card. Left panel shows the wordmark kokoro-speakd in mauve over a monospaced tagline. Right panel shows a continuous sine waveform with amplitude bars rising beneath it and a small speaker glyph anchoring the lower-right corner.</desc>
+  <rect width="1200" height="360" fill="#eff1f5"/>
+  <rect x="0" y="0" width="1200" height="3" fill="#8839ef"/>
+  <g font-family="ui-serif,Georgia,'Iowan Old Style','Apple Garamond',serif" fill="#4c4f69">
+    <text x="72" y="158" font-size="84" font-weight="700" letter-spacing="-3">kokoro-speakd</text>
+  </g>
+  <g font-family="ui-monospace,'JetBrains Mono','Fira Code',Menlo,monospace" fill="#6c6f85">
+    <text x="76" y="206" font-size="20">persistent kokoro tts daemon</text>
+    <text x="76" y="234" font-size="20">over unix socket</text>
+  </g>
+  <g font-family="ui-monospace,'JetBrains Mono','Fira Code',Menlo,monospace" fill="#8c8fa1">
+    <text x="76" y="284" font-size="14">pip install kokoro-speakd</text>
+  </g>
+  <g transform="translate(680,80)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0,110 C40,30 80,190 120,110 S200,30 240,110 S320,190 360,110 S440,30 480,110" stroke="#1e66f5" stroke-width="2.4" opacity="0.85"/>
+    <path d="M0,150 C40,70 80,230 120,150 S200,70 240,150 S320,230 360,150 S440,70 480,150" stroke="#1e66f5" stroke-width="1.6" opacity="0.35"/>
+    <g fill="#8839ef" opacity="0.92">
+      <rect x="16" y="186" width="6" height="22" rx="1"/>
+      <rect x="40" y="172" width="6" height="36" rx="1"/>
+      <rect x="64" y="156" width="6" height="52" rx="1"/>
+      <rect x="88" y="148" width="6" height="60" rx="1"/>
+      <rect x="112" y="160" width="6" height="48" rx="1"/>
+      <rect x="136" y="178" width="6" height="30" rx="1"/>
+      <rect x="160" y="166" width="6" height="42" rx="1"/>
+      <rect x="184" y="144" width="6" height="64" rx="1"/>
+      <rect x="208" y="158" width="6" height="50" rx="1"/>
+      <rect x="232" y="172" width="6" height="36" rx="1"/>
+      <rect x="256" y="186" width="6" height="22" rx="1"/>
+      <rect x="280" y="168" width="6" height="40" rx="1"/>
+      <rect x="304" y="152" width="6" height="56" rx="1"/>
+      <rect x="328" y="140" width="6" height="68" rx="1"/>
+      <rect x="352" y="154" width="6" height="54" rx="1"/>
+      <rect x="376" y="174" width="6" height="34" rx="1"/>
+      <rect x="400" y="164" width="6" height="44" rx="1"/>
+      <rect x="424" y="150" width="6" height="58" rx="1"/>
+      <rect x="448" y="172" width="6" height="36" rx="1"/>
+      <rect x="472" y="186" width="6" height="22" rx="1"/>
+    </g>
+  </g>
+  <g transform="translate(1056,236)" fill="#6c6f85" opacity="0.55">
+    <path d="M14,18 H42 L72,0 V86 L42,68 H14 Q0,68 0,54 V32 Q0,18 14,18 Z"/>
+    <path d="M82,18 Q98,30 98,43 Q98,56 82,68" fill="none" stroke="#6c6f85" stroke-width="3" stroke-linecap="round"/>
+    <path d="M82,4 Q108,22 108,43 Q108,64 82,82" fill="none" stroke="#6c6f85" stroke-width="2.4" stroke-linecap="round" opacity="0.65"/>
+  </g>
+  <g font-family="ui-monospace,'JetBrains Mono','Fira Code',Menlo,monospace" fill="#9ca0b0">
+    <text x="1128" y="338" font-size="11" text-anchor="end">yolo-labz/kokoro-speakd</text>
+  </g>
+</svg>
