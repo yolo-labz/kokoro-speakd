@@ -11,6 +11,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -37,7 +38,40 @@ def wait_for(check, timeout=240):
     raise TimeoutError("capture condition not reached")
 
 
+def cleanup(recorder, daemon, module, env):
+    """Attempt every owned cleanup, even when an earlier process will not exit."""
+
+    def stop(process):
+        if process is not None:
+            process.terminate()
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=10)
+
+    try:
+        stop(recorder)
+    finally:
+        try:
+            if daemon is not None:
+                try:
+                    subprocess.run(
+                        [sys.executable, str(ROOT / "client.py"), "interrupt"],
+                        env=env,
+                        capture_output=True,
+                        check=False,
+                        timeout=5,
+                    )
+                finally:
+                    stop(daemon)
+        finally:
+            if module is not None:
+                subprocess.run(["pactl", "unload-module", module], check=True, timeout=10)
+
+
 def main():
+    signal.signal(signal.SIGTERM, lambda signum, _frame: sys.exit(128 + signum))
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
@@ -46,11 +80,11 @@ def main():
             parser.error(f"missing {tool}")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    sink = f"kokoro_demo_{os.getpid()}"
     module = None
     daemon = recorder = None
     with tempfile.TemporaryDirectory(prefix="kokoro-demo-") as temporary:
         cache = Path(temporary)
+        sink = "kokoro_demo_" + cache.name.replace("-", "_")
         # Give only this daemon a player PATH; never select aplay's hardware default.
         player_bin = cache / "bin"
         player_bin.mkdir()
@@ -191,18 +225,7 @@ def main():
             (output / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
             print(json.dumps(metadata, indent=2))
         finally:
-            if recorder is not None:
-                recorder.terminate()
-                recorder.wait(timeout=10)
-            if daemon is not None:
-                # Interrupt only OUR socket before terminating OUR daemon.
-                subprocess.run(
-                    [sys.executable, str(ROOT / "client.py"), "interrupt"], env=env, capture_output=True, check=False
-                )
-                daemon.terminate()
-                daemon.wait(timeout=10)
-            if module is not None:
-                subprocess.run(["pactl", "unload-module", module], check=True)
+            cleanup(recorder, daemon, module, env)
 
 
 if __name__ == "__main__":

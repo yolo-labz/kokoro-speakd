@@ -20,7 +20,9 @@ The cast and monitor recorder start independently; this is not a sample-synced
 onset-latency benchmark. There is no claim that queue acknowledgement means audio
 has started. See `../evidence/audio-ffprobe.json`, `video-ffprobe.json`, model hashes
 and each recording's `metadata.json`. The exact executed recorder is preserved as
-`recorder-source.py.txt`; the current script adds a type-narrowing assertion only.
+`recorder-source.py.txt`. The current helper additionally uses a unique sink name,
+bounded cleanup with kill escalation, and a SIGTERM handler. These later safety
+changes do not relabel the original capture or claim a fresh recording.
 
 ## Reproduce
 
@@ -37,6 +39,12 @@ socket/cache. It refuses an existing output directory. `KOKORO_DEMO_HF_HOME` may
 point at a separate demo model cache to reuse downloads; it never needs an account.
 The recorder uses a 20 ms buffer: its default buffer previously dropped the quiet
 tail on termination, and the committed audio test caught that failure.
+
+Cleanup attempts daemon shutdown and sink unloading even if recorder reaping or
+the interrupt command times out; mock-only regressions cover these paths.
+SIGKILL cannot run Python cleanup and may leave owned processes/null sinks;
+inspect exact process/module identities before manual removal. Never remove a
+sink or process merely because its name resembles this recorder's.
 
 ## Provenance and rights
 
