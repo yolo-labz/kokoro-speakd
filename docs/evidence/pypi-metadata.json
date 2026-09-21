@@ -1,0 +1,21 @@
+{
+  "url": "https://pypi.org/pypi/kokoro-speakd/json",
+  "checked": "21/09/2026",
+  "name": "kokoro-speakd",
+  "version": "0.3.0",
+  "requires_dist": [
+    "onnxruntime>=1.16",
+    "torch>=2.0",
+    "onnxruntime-gpu; extra == \"gpu\""
+  ],
+  "files": [
+    {
+      "filename": "kokoro_speakd-0.3.0-py3-none-any.whl",
+      "sha256": "df8ee9dfb12ab50d107c613747f02d50907ec4ba9e816401af27f23130f3b5e2"
+    },
+    {
+      "filename": "kokoro_speakd-0.3.0.tar.gz",
+      "sha256": "50723298f982fb027d66ff12a3ff456f96fd468b7dcc3a2701e6ae277a799b2c"
+    }
+  ]
+}

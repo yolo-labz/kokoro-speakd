@@ -1,0 +1,12 @@
+{
+  "metadata.json": "6ff1dcf7c129b97db5fd95b208da340de7fc0a173a9f4a790dc0ae652902a8a4",
+  "kokoro-demo.cast": "c05cd36e9841dce7b7091f903a4ffef091befc891b8487f317936f293efd50f1",
+  "kokoro-demo.mp4": "516bf1b25f42bc0d3792f79c0c61452f6916444e0091e70d30ac7b1579e340cf",
+  "full-utterance.wav": "68ff395438904dee2884a461d7781cc2a7df83fb051ef0b9ce01d4f124c7ac3a",
+  "kokoro-demo.wav": "cbc35237fd09eaa406966b8537140f0ce847ca8fd8209ffa2995dcc1e745ff4a",
+  "recorder-source.py.txt": "97e8814c73bc68b2de3483e1fe5b0b81fc10c9ffb6b2e89160116e1d76dbfe9f",
+  "daemon.log": "a47e34edace2722c85a067b0eb8cbbbb13cd450823ca221a9122e41bb351b869",
+  "clip-edit.json": "d2b31c06dbb76f5284af5c3277fc685e0b571d547edf10bfb1e1e62b5584a160",
+  "synthetic-demo.txt": "ddceab170dc39511098fe16df8022e90eabd4db31e9179e034a5fe7b033ddd7b",
+  "runtime.log": "b0c672aa40c84d1fd40a6380effb65ca2f422acb13a5ec849f3e7ca4bce38e4e"
+}
