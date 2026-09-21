@@ -26,27 +26,32 @@ sessions doesn't pay the cold-start cost on every response.
 
 **Pattern.** Persistent Kokoro TTS daemon over a Unix socket — one `kokoro-speakd` process holds the Kokoro-82M weights and `en_core_web_sm` phonemizer in RAM; a stdlib-only `kokoro-speak` client speaks line-delimited JSON to it.
 
-**Trade-off.** A 5–8 s cold model load on first boot, in exchange for sub-500 ms warm-call latency on every subsequent `kokoro-speak` invocation. Per-call model reload is avoided entirely, regardless of how many concurrent clients are talking to the daemon.
+**Trade-off.** Startup loads and warms the model once. Later requests reuse it, but synthesis and audible-start time depend on text, hardware and load. A `queued` response only acknowledges acceptance; it does not mean speech has started.
 
-**Use when.** A Claude Code hook, shell pipeline, or agent loop needs synchronous TTS without paying PyTorch warm-up cost per response — markdown stripping is built in, preemption replaces queueing so the latest thought always wins, and the socket path is stable enough to drop into `Stop` / `SessionEnd` / `UserPromptSubmit` hooks.
+**Use when.** A Claude Code hook, shell pipeline, or agent loop needs asynchronous TTS without paying PyTorch warm-up cost per response — markdown stripping is built in, preemption replaces queueing so the latest thought always wins, and the socket path is stable enough to drop into `Stop` / `SessionEnd` / `UserPromptSubmit` hooks.
 
 ```bash
-pip install kokoro-speakd                # PyPI (when first release cut)
+pip install kokoro-speakd                # published; see runtime caveat below
 kokoro-speakd &                          # daemon, single instance per user
-echo "hello world" | kokoro-speak        # stdin → speech, ~412 ms warm-call
+echo "hello world" | kokoro-speak        # stdin → queued speech; silent on success
 kokoro-speak < release-notes.md          # markdown → strip → speech
 kokoro-speak interrupt                   # cancel in-flight playback
 ```
 
 ## Demo
 
-A non-interactive 18-second `asciinema` cast covering `kokoro-speakd --help`, daemon start with warm-load timing, `kokoro-speak ping`, an inline `echo … | kokoro-speak`, a markdown-stripping `kokoro-speak < file.md`, and `kokoro-speak interrupt` is checked into the repo at [`docs/assets/kokoro-demo.cast`](./docs/assets/kokoro-demo.cast). Replay locally:
+The [recording procedure](docs/assets/README.md) runs the real daemon and client
+on a temporary socket, routing playback into a private null sink rather than
+speakers. It records actual JSON `ping` output, silent successful `speak` and
+`interrupt` commands, and **audio** of synthetic speech interrupted mid-utterance.
+The old cast's colored 412/458 ms success messages were not current client output
+and have been replaced. No speech-onset benchmark is claimed.
 
-```bash
-asciinema play docs/assets/kokoro-demo.cast
-```
-
-A hosted player embed will land in a follow-up PR after the cast is uploaded to `asciinema.org`.
+PyPI already publishes **0.3.0** (metadata checked 21/09/2026; see
+[`docs/evidence/pypi-metadata.json`](docs/evidence/pypi-metadata.json)). Its declared
+dependencies are torch and onnxruntime, while this daemon imports `kokoro`, numpy
+and soundfile and needs language assets. A bare `pip install` is therefore not a
+verified complete runtime setup; use the Nix quick start below.
 
 ## How `kokoro-speakd` compares
 
@@ -54,8 +59,8 @@ Closest peers in the open-source TTS-client ecosystem:
 
 | Capability                                       | `kokoro-speakd` (this repo) | [`say`](https://ss64.com/osx/say.html) (macOS native) | [`espeak-ng`](https://github.com/espeak-ng/espeak-ng) | [`piper-tts`](https://github.com/rhasspy/piper) |
 |--------------------------------------------------|:---:|:---:|:---:|:---:|
-| Persistent daemon (warm-call <500 ms)            | yes | n/a (system service)         | no (per-call process) | manual (no built-in daemon) |
-| Quality voice (Kokoro 82M ONNX)                  | yes | yes (macOS voices only)      | no (formant-synth, robotic) | yes |
+| Persistent daemon (model reused)            | yes | n/a (system service)         | no (per-call process) | manual (no built-in daemon) |
+| Quality voice (Kokoro 82M PyTorch)                  | yes | yes (macOS voices only)      | no (formant-synth, robotic) | yes |
 | Cross-platform (Linux + macOS)                   | yes | no (macOS only)              | yes | yes |
 | Markdown → speech preprocessing                  | yes (`markdown.py` strip) | no | no | manual |
 | Preemption over queueing (latest thought wins)   | yes | no (queues)                  | no (no queue) | no |
@@ -70,7 +75,7 @@ For multi-tenant TTS gateways and self-hosted REST services see [`coqui-ai/TTS`]
 - **Not** a multi-tenant TTS SaaS. Each `kokoro-speakd` install is scoped to one user, one model in RAM, one socket.
 - **Not** a REST gateway. Use [`coqui-ai/TTS`](https://github.com/coqui-ai/TTS) or [`openedai-speech`](https://github.com/matatonic/openedai-speech) if that's what you want.
 - **Not** a real-time streaming TTS. Synthesis runs per-request; preemption swaps the playback target, it does not splice mid-utterance.
-- **Not** a voice-cloning tool. Voices are picked from the 54 ONNX models Kokoro ships; bring-your-own-voice is upstream's problem.
+- **Not** a voice-cloning tool. Voices use Kokoro's pretrained voice embeddings; bring-your-own-voice is upstream's problem.
 
 ## Quick start (with Nix)
 
@@ -84,9 +89,10 @@ nix run github:yolo-labz/kokoro-speakd#kokoro-speak -- ping
 nix run github:yolo-labz/kokoro-speakd#kokoro-speak -- interrupt
 ```
 
-The first request after a cold daemon start takes ~5–8 seconds while the
-PyTorch weights warm up. Every request after that is <500 ms regardless of
-how many clients are talking to the daemon.
+During model warmup the daemon returns `loading`; wait for `ping` to report
+`"ready": true` before sending speech. The client returns after acceptance,
+not playback completion. Neither warmup nor speech-onset has a fixed latency
+guarantee.
 
 ## Claude Code hook integration (nix-darwin / home-manager)
 

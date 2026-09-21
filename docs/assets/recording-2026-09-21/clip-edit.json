@@ -1,0 +1,5 @@
+{
+  "trim_start_seconds": 38.47408333333333,
+  "edit": "Remove initial synthesis wait only; remaining audio at original speed",
+  "input": "kokoro-demo.wav"
+}

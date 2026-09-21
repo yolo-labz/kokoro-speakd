@@ -1,0 +1,10 @@
+{"version": 2, "width": 100, "height": 24, "timestamp": 1789994832, "title": "Real kokoro-speak client; paired null-sink audio", "env": {"TERM": "xterm-256color"}}
+[5e-06, "o", "Isolated null-sink capture; synthetic text; real time; no latency benchmark.\r\n"]
+[3.5e-05, "o", "$ kokoro-speak ping\r\n"]
+[0.117795, "o", "{\"status\": \"pong\", \"ready\": true}\r\n"]
+[0.118164, "o", "$ kokoro-speak speak < synthetic-demo.txt\r\n"]
+[0.219817, "o", ""]
+[50.374501, "o", "$ kokoro-speak interrupt\r\n"]
+[50.434614, "o", ""]
+[52.43473, "o", "$ kokoro-speak ping\r\n"]
+[52.503047, "o", "{\"status\": \"pong\", \"ready\": true}\r\n"]

@@ -1,0 +1,1 @@
+This is real Kokoro speech, captured from an isolated audio sink. The next command will interrupt this sentence while it is still playing. This deliberately long synthetic example continues with more words so that the recording can demonstrate cancellation rather than natural completion. No personal messages, microphone input, or music are included.

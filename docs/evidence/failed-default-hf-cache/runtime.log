@@ -1,0 +1,33 @@
+[2026-09-21T09:36:54] loading kokoro runtime...
+[2026-09-21T09:36:54] listening on /var/tmp/pi-agent-1000/0b0f9e1f339bccae.3505744.7e49a505b919/kokoro-demo-42t7sjqb/demo.sock
+[2026-09-21T09:37:37] FATAL pipeline init error: PermissionError(13, 'Permission denied')
+Exception in thread load:
+Traceback (most recent call last):
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/threading.py", line 1044, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/threading.py", line 995, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/notroot/Documents/Code/yolo-labz/kokoro-speakd-039-truth-media-swarm/daemon.py", line 125, in load
+    pipeline = KPipeline(lang_code=default_lang)
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/kokoro/pipeline.py", line 109, in __init__
+    self.model = KModel(repo_id=repo_id).to(device).eval()
+                 ~~~~~~^^^^^^^^^^^^^^^^^
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/kokoro/model.py", line 46, in __init__
+    config = hf_hub_download(repo_id=repo_id, filename='config.json')
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/huggingface_hub/utils/_validators.py", line 89, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 982, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+        # Destination
+    ...<15 lines>...
+        dry_run=dry_run,
+    )
+  File "/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/huggingface_hub/file_download.py", line 1154, in _hf_hub_download_to_cache_dir
+    os.makedirs(os.path.dirname(blob_path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 218, in makedirs
+  File "<frozen os>", line 218, in makedirs
+  File "<frozen os>", line 228, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/notroot/.cache/huggingface/hub'

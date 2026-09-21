@@ -1,0 +1,11 @@
+[2026-09-21T09:38:16] loading kokoro runtime...
+[2026-09-21T09:38:16] listening on /var/tmp/pi-agent-1000/0b0f9e1f339bccae.3505744.7e49a505b919/kokoro-demo-b7a3sdta/demo.sock
+/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/torch/nn/modules/rnn.py:1013: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.2 and num_layers=1
+  super().__init__("LSTM", *args, **kwargs)
+/tmp/kokoro-daemonEnv/lib/python3.13/site-packages/torch/nn/utils/weight_norm.py:144: FutureWarning: `torch.nn.utils.weight_norm` is deprecated in favor of `torch.nn.utils.parametrizations.weight_norm`.
+  WeightNorm.apply(module, name, dim)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-21T09:38:46] warmup synth complete
+[2026-09-21T09:38:46] daemon ready (default lang=a, voice=af_sky)
+[2026-09-21T09:39:47] playing rid=1 pid=3825012 samples=511200 wav=/var/tmp/pi-agent-1000/0b0f9e1f339bccae.3505744.7e49a505b919/kokoro-demo-b7a3sdta/kokoro-1-ctqofpae.wav
+[2026-09-21T09:39:51] finished rid=1

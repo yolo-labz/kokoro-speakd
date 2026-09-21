@@ -1,0 +1,16 @@
+{
+  "source_head": "94cb7d2cf0f9d4d36b91437307494de6ef59d7db",
+  "recorder_sha256": "a29a140e15675317185ce7644aa66036080b8db9329744f2373db3db4a2a409f",
+  "python": "3.13.12 (main, Feb  3 2026, 17:53:27) [GCC 15.2.0]",
+  "python_executable": "/tmp/kokoro-daemonEnv/bin/python",
+  "capture": "PulseAudio null-sink monitor; no physical speaker or microphone",
+  "voice": "af_sky",
+  "sample_rate": 24000,
+  "channels": 1,
+  "playback_speed": 1,
+  "playing_log_observed_seconds": 46.37170383898774,
+  "interrupt_command_seconds": 50.37448605897953,
+  "wall_duration_seconds": 52.503072565974435,
+  "music": null,
+  "timing_note": "Cast and audio start independently; not sample-synchronised. No onset latency claim."
+}
