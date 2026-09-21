@@ -1,0 +1,3 @@
+[2026-09-21T09:36:54] loading kokoro runtime...
+[2026-09-21T09:36:54] listening on /var/tmp/pi-agent-1000/0b0f9e1f339bccae.3505744.7e49a505b919/kokoro-demo-42t7sjqb/demo.sock
+[2026-09-21T09:37:37] FATAL pipeline init error: PermissionError(13, 'Permission denied')
