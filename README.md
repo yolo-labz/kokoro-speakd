@@ -1,10 +1,19 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hero-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/hero-light.svg">
-  <img alt="kokoro-speakd: persistent Kokoro TTS daemon for Claude Code" src="docs/assets/hero-dark.svg">
+  <img alt="kokoro-speakd: persistent Kokoro TTS daemon for Claude Code" src="docs/assets/hero-dark.svg" width="640">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/yolo-labz/.github/main/profile/assets/brand/logo-mark-dark.svg">
+  <img src="https://raw.githubusercontent.com/yolo-labz/.github/main/profile/assets/brand/logo-mark-light.svg" alt="yolo-labz" width="48">
 </picture>
 
 # kokoro-speakd
+
+> Keep Kokoro ready between speech requests, with interruptible local playback.
+>
+> Single-user Unix-socket daemon; model assets and an audio player required. **Queued is not audible**: acceptance precedes synthesis and playback, and this is not streaming TTS.
 
 Persistent [Kokoro TTS](https://github.com/hexgrad/kokoro) daemon for Claude
 Code and other clients. Loads the model **once** and serves synthesis requests
@@ -185,6 +194,5 @@ MIT. See [LICENSE](./LICENSE).
 
 ---
 
-## Services
-
-Compliance-grade AI architecture for regulated workloads — async-first, USD-denominated, LATAM-based / EN-fluent. See [blog.home301server.com.br/services](https://blog.home301server.com.br/services/).
+Part of **[yolo-labz](https://github.com/yolo-labz)** — small tools, deliberate automation.
+[Org profile](https://github.com/yolo-labz) · [All repositories](https://github.com/orgs/yolo-labz/repositories) · [Engineering notes](https://blog.home301server.com.br)
