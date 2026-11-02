@@ -53,8 +53,10 @@ jobs:
         if: steps.check.outputs.skip == 'false'
         continue-on-error: true
         run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-cov || true
+          # Hash-pinned: an unpinned 'pip install pytest pytest-cov' (and the
+          # pip self-upgrade) meant the post-merge lane silently changed
+          # dependency versions with upstream releases.
+          python -m pip install --require-hashes -r .github/requirements/sonar-tests.txt || true
       - name: Run tests with coverage (best-effort)
         if: steps.check.outputs.skip == 'false'
         continue-on-error: true
