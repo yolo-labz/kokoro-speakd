@@ -114,12 +114,13 @@ guarantee.
    };
    ```
 
-2. Install the daemon and client on your user, and register a launchd agent
-   so the daemon auto-starts at login:
+2. Pass `inputs` to Home Manager through `home-manager.extraSpecialArgs = { inherit inputs; };`
+   in your nix-darwin configuration. This Home Manager module installs the client
+   and daemon and starts the daemon at login:
 
    ```nix
-   { inputs, pkgs, system, ... }: let
-     kokoro = inputs.kokoro-speakd.packages.${system};
+   { config, inputs, pkgs, ... }: let
+     kokoro = inputs.kokoro-speakd.packages.${pkgs.stdenv.hostPlatform.system};
    in {
      home.packages = [ kokoro.kokoro-speak kokoro.kokoro-speakd ];
 
