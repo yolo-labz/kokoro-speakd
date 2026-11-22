@@ -1,12 +1,9 @@
+<img src="https://raw.githubusercontent.com/yolo-labz/.github/96969d2591eae5b32c6f6e67a0812f2bca3085bd/profile/assets/brand/repo-headers/kokoro-speakd.png" alt="kokoro-speakd: Keep Kokoro ready between speech requests, with interruptible local playback." width="100%">
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/hero-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/assets/hero-light.svg">
   <img alt="kokoro-speakd: persistent Kokoro TTS daemon for Claude Code" src="docs/assets/hero-dark.svg" width="640">
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/yolo-labz/.github/main/profile/assets/brand/logo-mark-dark.svg">
-  <img src="https://raw.githubusercontent.com/yolo-labz/.github/main/profile/assets/brand/logo-mark-light.svg" alt="yolo-labz" width="48">
 </picture>
 
 # kokoro-speakd
