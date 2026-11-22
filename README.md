@@ -21,11 +21,11 @@ over a Unix domain socket, so a machine running 10+ concurrent Claude Code
 sessions doesn't pay the cold-start cost on every response.
 
 - **Single process**, single model in RAM, regardless of how many clients.
-- **Preemption over queueing** — new speech always cancels older in-flight
+- **Preemption over queueing**: new speech always cancels older in-flight
   playback, which is what you actually want when juggling many sessions.
-- **Lazy per-language pipelines** — default English loads at startup, other
+- **Lazy per-language pipelines**: default English loads at startup, other
   languages spin up on first use.
-- **Nix-first packaging** — `flake.nix` exports both the daemon and a
+- **Nix-first packaging**: `flake.nix` exports both the daemon and a
   stdlib-only client, with `dlinfo`/`en_core_web_sm` workarounds baked in
   so `python3Packages.kokoro` builds cleanly on darwin.
 - **Line-delimited JSON protocol** over Unix sockets, trivial to drive from
@@ -33,11 +33,11 @@ sessions doesn't pay the cold-start cost on every response.
 
 ## Capability
 
-**Pattern.** Persistent Kokoro TTS daemon over a Unix socket — one `kokoro-speakd` process holds the Kokoro-82M weights and `en_core_web_sm` phonemizer in RAM; a stdlib-only `kokoro-speak` client speaks line-delimited JSON to it.
+**Pattern.** Persistent Kokoro TTS daemon over a Unix socket, one `kokoro-speakd` process holds the Kokoro-82M weights and `en_core_web_sm` phonemizer in RAM; a stdlib-only `kokoro-speak` client speaks line-delimited JSON to it.
 
 **Trade-off.** Startup loads and warms the model once. Later requests reuse it, but synthesis and audible-start time depend on text, hardware and load. A `queued` response only acknowledges acceptance; it does not mean speech has started.
 
-**Use when.** A Claude Code hook, shell pipeline, or agent loop needs asynchronous TTS without paying PyTorch warm-up cost per response — markdown stripping is built in, preemption replaces queueing so the latest thought always wins, and the socket path is stable enough to drop into `Stop` / `SessionEnd` / `UserPromptSubmit` hooks.
+**Use when.** A Claude Code hook, shell pipeline, or agent loop needs asynchronous TTS without paying PyTorch warm-up cost per response, markdown stripping is built in, preemption replaces queueing so the latest thought always wins, and the socket path is stable enough to drop into `Stop` / `SessionEnd` / `UserPromptSubmit` hooks.
 
 ```bash
 pip install kokoro-speakd                # published; see runtime caveat below
@@ -77,7 +77,7 @@ Closest peers in the open-source TTS-client ecosystem:
 | PEP 740 PyPI attestations                        | pending Trusted Publishing wire | n/a | n/a | no |
 | Claude Code hook integration documented          | yes (`Stop` / `SessionEnd`) | no | no | no |
 
-For multi-tenant TTS gateways and self-hosted REST services see [`coqui-ai/TTS`](https://github.com/coqui-ai/TTS) or [`openedai-speech`](https://github.com/matatonic/openedai-speech) — different shape of problem, listed in [What this is NOT](#what-this-is-not).
+For multi-tenant TTS gateways and self-hosted REST services see [`coqui-ai/TTS`](https://github.com/coqui-ai/TTS) or [`openedai-speech`](https://github.com/matatonic/openedai-speech), different shape of problem, listed in [What this is NOT](#what-this-is-not).
 
 ## What this is NOT
 
@@ -138,7 +138,7 @@ guarantee.
    ```
 
 3. Point Claude Code's `Stop`, `UserPromptSubmit`, and `SessionEnd` hooks at
-   `kokoro-speak` — the daemon handles the rest. See
+   `kokoro-speak`, the daemon handles the rest. See
    [`phsb5321/NixOS`](https://github.com/phsb5321/NixOS/blob/main/modules/home/claude-code.nix)
    for a full reference integration, including the transcript walk that
    pulls Claude's final narrative text out of the JSONL log.
@@ -171,16 +171,16 @@ request or globally via `KOKORO_DEFAULT_VOICE` / `KOKORO_DEFAULT_LANG`.
 
 **Daemon:**
 
-- `KOKORO_SPEAKD_SOCKET` — socket path (default
+- `KOKORO_SPEAKD_SOCKET`, socket path (default
   `~/.cache/claude-code-tts/kokoro-speakd.sock`)
-- `KOKORO_SPEAKD_LOG` — log file path
-- `KOKORO_DEFAULT_VOICE`, `KOKORO_DEFAULT_LANG` — fallback values
+- `KOKORO_SPEAKD_LOG`, log file path
+- `KOKORO_DEFAULT_VOICE`, `KOKORO_DEFAULT_LANG`, fallback values
 
 **Client (`kokoro-speak`):**
 
-- `KOKORO_VOICE`, `KOKORO_LANG` — per-request overrides
-- `KOKORO_MAX` — hard char cap on the text sent (default 5000)
-- `KOKORO_SPEAKD_SOCKET` — matching override to reach a non-default daemon
+- `KOKORO_VOICE`, `KOKORO_LANG`, per-request overrides
+- `KOKORO_MAX`, hard char cap on the text sent (default 5000)
+- `KOKORO_SPEAKD_SOCKET`, matching override to reach a non-default daemon
 
 ## Voices
 
@@ -195,5 +195,5 @@ MIT. See [LICENSE](./LICENSE).
 
 ---
 
-Part of **[yolo-labz](https://github.com/yolo-labz)** — small tools, deliberate automation.
+Part of **[yolo-labz](https://github.com/yolo-labz)**: small tools, deliberate automation.
 [Org profile](https://github.com/yolo-labz) · [All repositories](https://github.com/orgs/yolo-labz/repositories) · [Engineering notes](https://blog.home301server.com.br)
